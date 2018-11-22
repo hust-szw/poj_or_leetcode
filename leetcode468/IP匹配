@@ -1,0 +1,48 @@
+#include "pch.h"
+#include <iostream>
+#include <regex>
+#include <string>
+/*
+*	要点：学会regex_match()的用法，正则表达式的书写
+*	出现错误：正则表达式中的|优先级最低所以当你需要在几个中作出选择的时候最好给整体加()
+*	比如你相匹配[0-9]|[a-z]如果前面有其他匹配符比如1[0-9]|[a-z]需写成1([0-9]|[a-z])
+*/
+
+using namespace std;
+
+string validIPAddress(string IP);
+
+int main()
+{
+	string IP;
+	while (true)
+	{
+		cout << "输入匹配字符串" << endl;
+		cin >> IP;	
+		cout << validIPAddress(IP)<<endl;
+	}
+}
+bool isIPv4(string IP)
+{
+	string pattern{ "(([1-9]?[0-9])|(1[0-9]{2})|(24[0-9])|(25[0-5]))(\.(([1-9]?[0-9])|(1[0-9]{2})|(24[0-9])|(25[0-5]))){3}" };
+	regex re(pattern);
+	if(regex_match(IP, re))
+		return true;
+	else return false;
+}
+bool isIPv6(string IP)
+{
+	string pattern{ "([0-9a-fA-F]){1,4}(:([0-9a-fA-F]){1,4}){7}" };
+	regex re(pattern);
+	if (regex_match(IP, re))
+		return true;
+	else return false;
+}
+ 
+string validIPAddress(string IP) 
+{
+	if (isIPv4(IP)) return "IPv4";
+	else if (isIPv6(IP)) return "IPv6";
+	else return "Neither";
+}
+
